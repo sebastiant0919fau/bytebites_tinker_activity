@@ -1,6 +1,3 @@
-from models import Customer, MenuItem, Menu, Order
-
-
 import pytest
 
 from models import Customer, MenuItem, Menu, Order
@@ -89,3 +86,48 @@ def test_customer_purchase_history():
     assert customer.name == "Alex"
     assert len(customer.purchase_history) == 1
     assert customer.purchase_history[0] is order
+
+
+def test_customer_is_verified_after_purchase():
+    customer = Customer("Alex")
+    burger = MenuItem("Spicy Burger", 10.00, "Food", 4.8)
+
+    assert customer.is_verified() is False
+
+    customer.add_purchase(Order([burger]))
+
+    assert customer.is_verified() is True
+
+
+def test_order_rejects_non_menu_items():
+    with pytest.raises(TypeError):
+        Order(["Spicy Burger"])
+
+
+def test_order_add_item_updates_total():
+    order = Order()
+    soda = MenuItem("Large Soda", 3.00, "Drinks", 4.5)
+
+    order.add_item(soda)
+
+    assert order.items == [soda]
+    assert order.calculate_total() == pytest.approx(3.00)
+
+
+def test_order_add_item_rejects_non_menu_items():
+    order = Order()
+
+    with pytest.raises(TypeError):
+        order.add_item("Large Soda")
+
+
+def test_sort_by_popularity_does_not_change_menu_order():
+    menu = Menu()
+    soda = MenuItem("Large Soda", 3.00, "Drinks", 4.5)
+    cake = MenuItem("Chocolate Cake", 5.00, "Desserts", 4.9)
+    menu.add_item(soda)
+    menu.add_item(cake)
+
+    menu.sort_by_popularity()
+
+    assert menu.items == [soda, cake]
