@@ -13,7 +13,9 @@ Finally, when a user picks items, we need to group them into a single transactio
 
 ## Candidate Classes
 
-1. Customer
-2. MenuItem
-3. Menu
-4. Order
+1. Customer: Stores a customer's name and their past orders, and is_verified() treats them as a real user if they have at least one past purchase.
+2. MenuItem: Holds one food item's name, price, category, and popularity rating.
+3. Menu: Holds every MenuItem the app sells and can filter them by category, such as "Drinks" or "Desserts".
+4. Order: Groups the items one customer picked into a single transaction, and compute_total() adds up their prices.
+
+
